@@ -1,0 +1,99 @@
+1. installation
+on ubuntu
+$sudo apt install docker.io
+on windows install by official site
+
+2. check docker service status
+on ubuntu
+$service docker status
+if not running
+$service docker start
+
+3. add user to group 'docker'
+$sudo usermod -aG docker $USER
+then log out and log in.
+
+4. check docker version
+$docker version
+# it should without any error message
+
+5. search image on dockerhub
+$docker search <keyword/image_name>
+
+6. pull image (optional)
+$docker pull <image_name>
+
+7. list pulled images
+$docker images
+
+8. run the command through docker (single line)
+$docker run <image_name> <bin_file> <argument>
+e.g. $docker run ubuntu /bin/echo 'hello world'
+
+9. enter docker container environment
+$docker run -i -t <image_name>
+e.g. $docker -i -t ubuntu
+exit environment with command 'exit'
+e.g. ubuntu> exit
+# if the image_name hasn't been pulled, docker will auto pull it.
+
+10. run docker as background
+$docker run -d <image_name> <bin_file> -c <command>
+e.g. $docker run -d ubuntu /bin/sh -c "while true; do echo hello world; sleep 3; done"
+# then it should return a seed to identify this process
+
+11. check running container
+$docker ps [-a] # if add -a --all will list all even not running container
+# it will list the running container
+e.g. $docker ps
+CONTAINER ID    IMAGE    COMMAND           CREATED            STATUS            PORTS    NAMES
+68d391b4d9bc    ubuntu   "/bin/sh -c '..." about a minute ago Up about a minute          happy_wilson
+
+12. check the output of the container
+# the output would been logged at ps_name
+e.g. happy_wilson
+# the command to check it is:
+$docker logs <ps_name>
+e.g. $docker logs happy_wilson
+
+13. stop running container
+$docker stop <ps_name>
+e.g. $docker stop happy_wilson
+
+14. build docker image
+$docker build <path_to_workdir> -t <image_name>
+e.g. $docker build . -t simple-express-server
+
+15. run service and port delegate
+$docker run -p <host_port>:<container_port> <image_name>
+e.g. $docker run -p 3000:8080 simple-express-server
+
+16. moving image to other host
+# the best way to do migrate, it should be that
+# save 'Dockerfile' and source code on git server
+# and build it on new server
+
+17. create named volume
+$docker volume create --name <name>
+e.g. $docker volume create --name db-data
+
+18. use volume
+$docker run -v <volume_name>:<container_path>
+e.g. $docker run -v db-data:/db/data -it ubuntu...
+
+19. use host volume
+$docker run -v <host_path>:<container_path>
+e.g. $docker run -v ~:/user -it ubuntu...
+
+note:
+docker pull mysql # success
+docker pull phpmyadmin/phpmyadmin # success
+
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD='pass' -d --rm mysql:latest # success
+# can't connect by host, but can work with phpmyadmin on docker
+docker run --name phpmyadmin -e PMA_HOST="some-mysql" -d --rm --link some-mysql -p 8090:80 phpmyadmin/phpmyadmin #success
+docker run --name temp-mysql -d --rm -e MYSQL_ROOT_PASSWORD='pass' -p 3306:3306 mysql # success
+# can connect by host
+MYSQL_ROOT_PASSWORD='pass' === MYSQL_ROOT_PASSWORD=pass
+docker run --name xinan-mysql -d --rm -v /home/ttc/Xinan/dockers/mysql-data:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD='ttc@0322' mysql # success
+# if use -v option, the -e MYSQL_ROOT_PASSWORD only need at first time
