@@ -30,12 +30,15 @@ $docker images
 $docker run <image_name> <bin_file> <argument>
 e.g. $docker run ubuntu /bin/echo 'hello world'
 
-9. enter docker container environment
+9. build container and enter its environment
 $docker run -i -t <image_name>
 e.g. $docker -i -t ubuntu
 exit environment with command 'exit'
 e.g. ubuntu> exit
 # if the image_name hasn't been pulled, docker will auto pull it.
+
+9.1 enter a exist container
+$docker exec -it <container_name> <command>
 
 10. run docker as background
 $docker run -d <image_name> <bin_file> -c <command>
@@ -86,7 +89,10 @@ $docker run -v <host_path>:<container_path>
 e.g. $docker run -v ~:/user -it ubuntu...
 
 20. remove docker container
-$docker rm <container_path>
+$docker rm <container_name>
+
+21. change running container setting
+edit file locate /var/lib/docker/containers/[hash_of_the_container]/hostconfig.json
 
 note:
 docker pull mysql # success
