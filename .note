@@ -85,6 +85,9 @@ e.g. $docker run -v db-data:/db/data -it ubuntu...
 $docker run -v <host_path>:<container_path>
 e.g. $docker run -v ~:/user -it ubuntu...
 
+20. remove docker container
+$docker rm <container_path>
+
 note:
 docker pull mysql # success
 docker pull phpmyadmin/phpmyadmin # success
